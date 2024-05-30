@@ -44,6 +44,11 @@ export const insertItem = async (name, type = '') => {
     throw new Error('Name/Description is required');
   }
 
+  const exists = await itemExists(name, type);
+  if (exists) {
+    return Promise.resolve({ success: true, message: 'Item already exists' });
+  }
+
   const db = await getDBConnection();
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -68,23 +73,48 @@ export const insertItemsFromCSV = async (filePath) => {
   const records = parse(fileContent, { header: true });
 
   return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      records.forEach(record => {
+    db.transaction(async tx => {
+      for (const record of records) {
         const { Name, Type } = record;
         if (Name) {
-          tx.executeSql(
-            'INSERT INTO Items (Name, Type) VALUES (?, ?)',
-            [Name, Type || ''],
-            (tx, results) => {
-              // Continue to next record
-            },
-            (tx, error) => {
-              reject(error);
-            }
-          );
+          const exists = await itemExists(Name, Type);
+          if (!exists) {
+            tx.executeSql(
+              'INSERT INTO Items (Name, Type) VALUES (?, ?)',
+              [Name, Type || ''],
+              (tx, results) => {
+                // Continue to next record
+              },
+              (tx, error) => {
+                reject(error);
+              }
+            );
+          }
         }
-      });
+      }
       resolve();
+    });
+  });
+};
+
+export const itemExists = async (name, type = '') => {
+  const db = await getDBConnection();
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT * FROM Items WHERE LOWER(Name) = ? AND LOWER(Type) = ?',
+        [name.toLowerCase(), type.toLowerCase()],
+        (tx, results) => {
+          if (results.rows.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (tx, error) => {
+          reject(error);
+        }
+      );
     });
   });
 };
@@ -110,6 +140,24 @@ export const searchItems = async (query, type = '') => {
       }, error => {
         reject(error);
       });
+    });
+  });
+};
+
+export const deleteItem = async (name, type = '') => {
+  const db = await getDBConnection();
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'DELETE FROM Items WHERE LOWER(Name) = ? AND LOWER(Type) = ?',
+        [name.toLowerCase(), type.toLowerCase()],
+        (tx, results) => {
+          resolve(results);
+        },
+        (tx, error) => {
+          reject(error);
+        }
+      );
     });
   });
 };
