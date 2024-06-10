@@ -1,6 +1,5 @@
 import SQLite from 'react-native-sqlite-storage';
-import RNFS from 'react-native-fs';
-import { parse } from 'react-native-csv';
+import * as Papa from 'papaparse';
 
 // SQLite setup
 SQLite.DEBUG(true);
@@ -44,21 +43,26 @@ export const insertItem = async (name, type = '') => {
     throw new Error('Name/Description is required');
   }
 
+  console.log('Checking if item exists:', name, type);
   const exists = await itemExists(name, type);
   if (exists) {
+    console.log('Item already exists:', name, type);
     return Promise.resolve({ success: true, message: 'Item already exists' });
   }
 
   const db = await getDBConnection();
+  console.log('Inserting item into database:', name, type);
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
         'INSERT INTO Items (Name, Type) VALUES (?, ?)',
         [name, type],
         (tx, results) => {
+          console.log('Item inserted successfully:', name, type);
           resolve(results);
         },
         (tx, error) => {
+          console.log('Error inserting item:', error);
           reject(error);
         }
       );
@@ -66,36 +70,43 @@ export const insertItem = async (name, type = '') => {
   });
 };
 
-export const insertItemsFromCSV = async (filePath) => {
-  const db = await getDBConnection();
+export const insertItemsFromCSV = async (fileContent) => {
+  try {
+    console.log('File content received:', fileContent);
 
-  const fileContent = await RNFS.readFile(filePath, 'utf8');
-  const records = parse(fileContent, { header: true });
-
-  return new Promise((resolve, reject) => {
-    db.transaction(async tx => {
-      for (const record of records) {
-        const { Name, Type } = record;
-        if (Name) {
-          const exists = await itemExists(Name, Type);
-          if (!exists) {
-            tx.executeSql(
-              'INSERT INTO Items (Name, Type) VALUES (?, ?)',
-              [Name, Type || ''],
-              (tx, results) => {
-                // Continue to next record
-              },
-              (tx, error) => {
-                reject(error);
-              }
-            );
-          }
-        }
-      }
-      resolve();
+    // Parse CSV content using PapaParse
+    const results = Papa.parse(fileContent, {
+      header: false,
+      skipEmptyLines: true,
     });
-  });
+
+    if (results.errors.length) {
+      throw new Error(`CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`);
+    }
+
+    const records = results.data;
+    console.log('Parsed records:', records);
+
+    for (const record of records) {
+      if (record.length >= 2) {
+        const name = record[0];
+        const type = record[1];
+        console.log(`Inserting item: Name=${name}, Type=${type}`);
+        await insertItem(name, type);
+      } else if (record.length === 1) {
+        const name = record[0];
+        console.log(`Inserting item: Name=${name}, Type=`);
+        await insertItem(name, '');
+      }
+    }
+
+    console.log('Items have been successfully inserted');
+  } catch (error) {
+    console.error('Error inserting items from CSV:', error);
+    throw error;
+  }
 };
+
 
 export const itemExists = async (name, type = '') => {
   const db = await getDBConnection();

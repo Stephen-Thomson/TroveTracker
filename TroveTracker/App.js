@@ -20,7 +20,7 @@ const App = () => {
 
     initializeDB();
   }, []);
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator
