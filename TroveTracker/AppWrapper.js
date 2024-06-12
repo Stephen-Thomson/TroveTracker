@@ -9,6 +9,7 @@ import Input from './Input';
 import ReadFile from './ReadFile';
 import Delete from './Delete';
 import Help from './Help';
+import Results from './Results';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +49,7 @@ const AppWrapper = ({ navigation }) => {
         <Stack.Screen name="ReadFile" component={ReadFile} />
         <Stack.Screen name="Delete" component={Delete} />
         <Stack.Screen name="Help" component={Help} />
+        <Stack.Screen name="Results" component={Results} />
       </Stack.Navigator>
     </View>
   );

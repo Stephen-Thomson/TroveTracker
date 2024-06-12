@@ -155,13 +155,18 @@ export const searchItems = async (query, type = '') => {
   });
 };
 
-export const deleteItem = async (name, type = '') => {
+export const deleteItemsByIds = async (ids) => {
+  if (ids.length === 0) return;
+
   const db = await getDBConnection();
+  const placeholders = ids.map(() => '?').join(', ');
+  const sql = `DELETE FROM Items WHERE id IN (${placeholders})`;
+
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'DELETE FROM Items WHERE LOWER(Name) = ? AND LOWER(Type) = ?',
-        [name.toLowerCase(), type.toLowerCase()],
+        sql,
+        ids,
         (tx, results) => {
           resolve(results);
         },

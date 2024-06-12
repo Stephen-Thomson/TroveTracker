@@ -1,23 +1,68 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { searchItems } from './Database'; // Ensure this function is correctly imported
 
-const Search = () => {
+const Search = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
+
+  const handleSearch = async () => {
+    if (!name.trim()) {
+      Alert.alert('Validation Error', 'Please enter a name.');
+      return;
+    }
+
+    try {
+      const results = await searchItems(name.trim(), type.trim());
+      setName('');
+      setType('');
+      navigation.navigate('Results', { results });
+    } catch (error) {
+      Alert.alert('Error', 'Failed to search items');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is the Search page</Text>
+      <Text style={styles.label}>Name</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter name"
+        value={name}
+        onChangeText={setName}
+        placeholderTextColor="#000"
+      />
+      <Text style={styles.label}>Type (optional)</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter type"
+        value={type}
+        onChangeText={setType}
+        placeholderTextColor="#000"
+      />
+      <Button title="Search" onPress={handleSearch} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 16,
   },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#000',
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingLeft: 8,
+    color: '#000', // Set the text color to black
   },
 });
 

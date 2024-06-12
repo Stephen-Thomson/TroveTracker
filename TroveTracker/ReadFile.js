@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   filePath: {
     marginBottom: 16,
     fontSize: 16,
-    Color: 'black',
+    color: 'black',
   },
   spacing: {
     marginTop: 20, // Add space between the buttons

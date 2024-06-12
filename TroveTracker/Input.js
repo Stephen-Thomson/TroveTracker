@@ -28,12 +28,14 @@ const Input = () => {
       <TextInput
         style={styles.input}
         placeholder="Name"
+        placeholderTextColor="black"
         value={name}
         onChangeText={setName}
       />
       <TextInput
         style={styles.input}
         placeholder="Type (optional)"
+        placeholderTextColor="black"
         value={type}
         onChangeText={setType}
       />
@@ -54,6 +56,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
+    color: 'black',
   },
 });
 
