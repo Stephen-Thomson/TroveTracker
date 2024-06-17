@@ -96,6 +96,7 @@ const Delete = () => {
             <CheckBox
               value={selectedIds.includes(item.id)}
               onValueChange={() => handleCheckboxChange(item.id)}
+              tintColors={{ true: 'black', false: 'black' }}
             />
           </View>
           <View style={styles.nameColumn}>
@@ -122,7 +123,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: 'black',
+    color: '#000',
+    fontWeight: 'bold',
   },
   input: {
     height: 40,

@@ -5,7 +5,7 @@ const Front = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Welcome to Trove Tracker!</Text>
-      <Image source={require('./imgs/PHIcon.png')} style={styles.image} />
+      <Image source={require('./imgs/TTFront.png')} style={styles.image} />
     </View>
   );
 }
@@ -18,12 +18,13 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 24,
+    color: '#000',
     fontWeight: 'bold',
   },
   image: {
-    width: 200, // Adjust the width and height as needed
+    width: 200,
     height: 200,
-    marginTop: 20, // Add spacing between text and image
+    marginTop: 20,
   },
 });
 

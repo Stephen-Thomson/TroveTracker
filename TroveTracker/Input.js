@@ -1,6 +1,6 @@
 // Input.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { insertItem } from './Database';
 
 const Input = () => {
@@ -25,6 +25,7 @@ const Input = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.label}>Name</Text>
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -32,6 +33,7 @@ const Input = () => {
         value={name}
         onChangeText={setName}
       />
+      <Text style={styles.label}>Type (optional)</Text>
       <TextInput
         style={styles.input}
         placeholder="Type (optional)"
@@ -49,6 +51,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#000',
+    fontWeight: 'bold',
   },
   input: {
     height: 40,

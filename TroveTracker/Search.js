@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 8,
     color: '#000',
+    fontWeight: 'bold',
   },
   input: {
     height: 40,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
-    color: '#000', // Set the text color to black
+    color: '#000',
   },
 });
 
