@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 48,
+    fontFamily: 'Harrington'
   },
   buttonContainer: {
     flexDirection: 'row',

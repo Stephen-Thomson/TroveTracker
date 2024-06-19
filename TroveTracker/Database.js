@@ -10,6 +10,12 @@ const database_version = "1.0";
 const database_displayname = "SQLite Database";
 const database_size = 200000;
 
+let selectedTable = 'Inventory';
+
+export const setTable = (table) => {
+  selectedTable = table;
+};
+
 export const getDBConnection = async () => {
   return await SQLite.openDatabase(
     database_name,
@@ -19,13 +25,20 @@ export const getDBConnection = async () => {
   );
 };
 
-export const createTable = async () => {
+export const createTables = async () => {
   const db = await getDBConnection();
-  await db.transaction(tx => {
+  db.transaction(tx => {
     tx.executeSql(
-      `CREATE TABLE IF NOT EXISTS Items (
+      `CREATE TABLE IF NOT EXISTS Inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Name TEXT NOT NULL,
+        Name TEXT,
+        Type TEXT
+      );`
+    );
+    tx.executeSql(
+      `CREATE TABLE IF NOT EXISTS Wanted (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Name TEXT,
         Type TEXT
       );`
     );
@@ -34,7 +47,7 @@ export const createTable = async () => {
 
 export const initDatabase = async () => {
   const db = await getDBConnection();
-  await createTable();
+  await createTables();
   return db;
 };
 
@@ -55,7 +68,7 @@ export const insertItem = async (name, type = '') => {
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO Items (Name, Type) VALUES (?, ?)',
+        `INSERT INTO ${selectedTable} (Name, Type) VALUES (?, ?)`,
         [name, type],
         (tx, results) => {
           console.log('Item inserted successfully:', name, type);
@@ -108,36 +121,21 @@ export const insertItemsFromCSV = async (fileContent) => {
 };
 
 
-export const itemExists = async (name, type = '') => {
-  const db = await getDBConnection();
-  return new Promise((resolve, reject) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT * FROM Items WHERE LOWER(Name) = ? AND LOWER(Type) = ?',
-        [name.toLowerCase(), type.toLowerCase()],
-        (tx, results) => {
-          if (results.rows.length > 0) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (tx, error) => {
-          reject(error);
-        }
-      );
-    });
-  });
-};
 
 export const searchItems = async (query, type = '') => {
   const db = await getDBConnection();
-  let sql = 'SELECT * FROM Items WHERE LOWER(name) LIKE ?';
-  let params = [`%${query.toLowerCase()}%`];
+  let sql = `SELECT * FROM ${selectedTable} WHERE `;
+  let params = [];
 
-  if (type) {
-    sql += ' AND LOWER(type) = ?';
-    params.push(type.toLowerCase());
+  if (query && type) {
+    sql += 'LOWER(Name) LIKE ? AND LOWER(Type) = ?';
+    params.push(`%${query.toLowerCase()}%`, type.toLowerCase());
+  } else if (query) {
+    sql += 'LOWER(Name) LIKE ?';
+    params.push(`%${query.toLowerCase()}%`);
+  } else if (type) {
+    sql += 'LOWER(Type) = ?';
+    params.push(`%${type.toLowerCase()}%`);
   }
 
   return new Promise((resolve, reject) => {
@@ -160,7 +158,7 @@ export const deleteItemsByIds = async (ids) => {
 
   const db = await getDBConnection();
   const placeholders = ids.map(() => '?').join(', ');
-  const sql = `DELETE FROM Items WHERE id IN (${placeholders})`;
+  const sql = `DELETE FROM ${selectedTable} WHERE id IN (${placeholders})`;
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {

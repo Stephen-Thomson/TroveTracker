@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
-import { searchItems } from './Database'; // Ensure this function is correctly imported
+import { searchItems } from './Database';
 
 const Search = ({ navigation }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
 
   const handleSearch = async () => {
-    if (!name.trim()) {
-      Alert.alert('Validation Error', 'Please enter a name.');
+    if (!name.trim() && !type.trim()) {
+      Alert.alert('Validation Error', 'Please enter a name or type.');
       return;
     }
 
@@ -21,6 +21,8 @@ const Search = ({ navigation }) => {
       Alert.alert('Error', 'Failed to search items');
     }
   };
+
+  const isButtonDisabled = !name.trim() && !type.trim();
 
   return (
     <View style={styles.container}>
@@ -40,7 +42,7 @@ const Search = ({ navigation }) => {
         onChangeText={setType}
         placeholderTextColor="#000"
       />
-      <Button title="Search" onPress={handleSearch} />
+      <Button title="Search" onPress={handleSearch} disabled={isButtonDisabled} />
     </View>
   );
 };
