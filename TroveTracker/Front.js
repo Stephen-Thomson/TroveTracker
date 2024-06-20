@@ -17,7 +17,8 @@ const Front = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome to Trove Tracker!</Text>
+      <Text style={styles.text}>Welcome to</Text>
+      <Text style={styles.text}>Trove Tracker</Text>
       
       <View style={styles.space} />
 
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 36,
     color: '#000',
-    fontFamily: 'Harrington',
+    fontFamily: 'Harrington Bold',
   },
   subtitle: {
     fontSize: 16,
