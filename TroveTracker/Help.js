@@ -46,6 +46,15 @@ const Help = () => {
       </Text>
       <View style={styles.separator}></View>
 
+      <Text style={styles.header}>Home</Text>
+      <View style={styles.imageContainer}>
+        <Image source={require('./imgs/homeimg.png')} style={styles.image} />
+      </View>
+      <Text style={styles.helpText}>
+        Trove Tracker can keep track of your inventory of items as well as a wanted list of items. You can select which database you want to access here on the Home page. This page also offers the option of switching between Dark Mode and Light Mode.
+      </Text>
+      <View style={styles.separator}></View>
+
       <Text style={styles.header}>Search</Text>
       <View style={styles.imageContainer}>
         <Image source={require('./imgs/searchimg1.png')} style={styles.image} />
@@ -83,6 +92,16 @@ const Help = () => {
       <Text style={styles.helpText}>
         To remove items from the database, enter the keyword(s) related to the item name or description. You can also enter a type to refine your search. Click the Search button to display the matching items. Check the boxes next to the items you wish to delete, then click the Delete button. You can enter new keyword(s) and perform another search at any time for different results.
       </Text>
+
+      <Text style={styles.header}>Creating A CSV</Text>
+      <View style={styles.imageContainer}>
+        <Image source={require('./imgs/csvimg1.png')} style={styles.image} />
+        <Image source={require('./imgs/csvimg2.png')} style={styles.image} />
+      </View>
+      <Text style={styles.helpText}>
+        Creating a CSV file for batch inserting items into Trove Tracker is simple. Use Excel to create two columns for your entries, then save the file as a CSV. Alternatively, you can use a text editor like Notepad. Enter the item name, followed by a comma, and then the item type. Ensure each item is on a new line, with no headers such as Name or Type. Then simply save as a CSV file.
+      </Text>
+      <View style={styles.separator}></View>
 
     </ScrollView>
   );

@@ -1,5 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
 import * as Papa from 'papaparse';
+import { Alert } from 'react-native';
 
 // SQLite setup
 SQLite.DEBUG(true);
@@ -51,6 +52,28 @@ export const initDatabase = async () => {
   return db;
 };
 
+export const itemExists = async (name, type = '') => {
+  const db = await getDBConnection();
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM ${selectedTable} WHERE LOWER(Name) = ? AND LOWER(Type) = ?`,
+        [name.toLowerCase(), type.toLowerCase()],
+        (tx, results) => {
+          if (results.rows.length > 0) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        (tx, error) => {
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
 export const insertItem = async (name, type = '') => {
   if (!name) {
     throw new Error('Name/Description is required');
@@ -94,6 +117,7 @@ export const insertItemsFromCSV = async (fileContent) => {
     });
 
     if (results.errors.length) {
+      Alert.alert('Error', `CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`);
       throw new Error(`CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`);
     }
 
@@ -113,8 +137,10 @@ export const insertItemsFromCSV = async (fileContent) => {
       }
     }
 
+    Alert.alert('Success', 'Items have been successfully inserted');
     console.log('Items have been successfully inserted');
   } catch (error) {
+    Alert.alert('Error', 'Error inserting items from CSV: ' + error.message);
     console.error('Error inserting items from CSV:', error);
     throw error;
   }

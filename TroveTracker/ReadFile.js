@@ -8,31 +8,8 @@ const ReadFile = () => {
   const [fileName, setFileName] = useState(null);
   const [fileContents, setFileContents] = useState(''); 
 
-  const requestStoragePermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          {
-            title: 'Storage Permission',
-            message: 'TroveTracker needs access to your storage to read files',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Storage permission granted');
-        } else {
-          console.log('Storage permission denied');
-        }
-      } catch (error) {
-        console.error('Failed to request storage permission:', error);
-      }
-  };
- 
   const handleBrowse = async () => {
     try {
-      await requestStoragePermission();
       console.log('Selecting file...');
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
@@ -50,6 +27,7 @@ const ReadFile = () => {
       if (DocumentPicker.isCancel(err)) {
         console.log('User canceled file picking');
       } else {
+        Alert.alert('Error', 'Failed to pick file: ' + err.message || 'Unknown error');
         console.log('Error picking file:', err);
       }
     }
@@ -66,7 +44,7 @@ const ReadFile = () => {
       Alert.alert('Success', 'Items have been added from the CSV file');
     } catch (error) {
       console.log('Error inserting items from CSV:', error);
-      Alert.alert('Error', 'Failed to add items from the CSV file');
+      Alert.alert('Error', 'Failed to add items from the CSV file' + error.message || 'Unknown error');
     }
   };
 
