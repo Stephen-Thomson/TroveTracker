@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AppWrapper from './AppWrapper';
-import { initDatabase } from './Database'; // Import the database initialization function
+import { initDatabase } from './Database';
+import { ThemeProvider } from './ThemeContext';
 
 const Stack = createStackNavigator();
 
@@ -22,14 +23,16 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-      screenOptions={{
-          headerShown: false
-        }}>
-        <Stack.Screen name="AppWrapper" component={AppWrapper} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="AppWrapper" component={AppWrapper} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 

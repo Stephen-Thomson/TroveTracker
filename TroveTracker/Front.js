@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Switch } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { setTable } from './Database';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Front = () => {
   const [selectedOption, setSelectedOption] = useState('Inventory');
+  const { theme, toggleTheme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
 
   const handleCheckboxChange = (option) => {
     setSelectedOption(option);
@@ -29,7 +34,7 @@ const Front = () => {
           <CheckBox
             value={selectedOption === 'Inventory'}
             onValueChange={() => handleCheckboxChange('Inventory')}
-            tintColors={{ true: '#000', false: '#000' }}
+            tintColors={{ true: currentTheme.borderColor, false: currentTheme.borderColor }}
           />
           <Text style={styles.checkboxLabel}>Inventory</Text>
         </View>
@@ -37,7 +42,7 @@ const Front = () => {
           <CheckBox
             value={selectedOption === 'Wanted'}
             onValueChange={() => handleCheckboxChange('Wanted')}
-            tintColors={{ true: '#000', false: '#000' }}
+            tintColors={{ true: currentTheme.borderColor, false: currentTheme.borderColor }}
           />
           <Text style={styles.checkboxLabel}>Wanted</Text>
         </View>
@@ -46,24 +51,38 @@ const Front = () => {
       <View style={styles.space} />
 
       <Image source={require('./imgs/TTFront.png')} style={styles.image} />
+
+      <View style={styles.space} />
+
+      <View style={styles.themeSwitchContainer}>
+        <Text style={styles.themeSwitchLabel}>Light Mode</Text>
+        <Switch
+          value={theme === 'dark'}
+          onValueChange={toggleTheme}
+          thumbColor={currentTheme.switchThumb}
+          trackColor={{ false: currentTheme.switchTrackFalse, true: currentTheme.switchTrackTrue }}
+        />
+        <Text style={styles.themeSwitchLabel}>Dark Mode</Text>
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: theme.background,
   },
   text: {
     fontSize: 36,
-    color: '#000',
+    color: theme.text,
     fontFamily: 'Harrington Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: '#000',
+    color: theme.text,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -79,7 +98,7 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 16,
-    color: '#000',
+    color: theme.text,
     fontWeight: 'bold',
     marginLeft: 5,
   },
@@ -90,6 +109,17 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     marginTop: 20,
+  },
+  themeSwitchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    color: theme.text,
+  },
+  themeSwitchLabel: {
+    fontSize: 16,
+    color: theme.text,
+    marginHorizontal: 10,
   },
 });
 

@@ -1,11 +1,15 @@
-// Input.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { insertItem } from './Database';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Input = () => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
 
   const handleAddItem = async () => {
     if (!name.trim()) {
@@ -29,7 +33,7 @@ const Input = () => {
       <TextInput
         style={styles.input}
         placeholder="Name"
-        placeholderTextColor="black"
+        placeholderTextColor= {theme.text}
         value={name}
         onChangeText={setName}
       />
@@ -37,7 +41,7 @@ const Input = () => {
       <TextInput
         style={styles.input}
         placeholder="Type (optional)"
-        placeholderTextColor="black"
+        placeholderTextColor= {theme.text}
         value={type}
         onChangeText={setType}
       />
@@ -46,25 +50,26 @@ const Input = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: theme.background,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#000',
+    color: theme.text,
     fontWeight: 'bold',
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: theme.borderColor,
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
-    color: 'black',
+    color: theme.text,
   },
 });
 

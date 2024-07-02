@@ -2,7 +2,6 @@ import SQLite from 'react-native-sqlite-storage';
 import * as Papa from 'papaparse';
 import { Alert } from 'react-native';
 
-// SQLite setup
 SQLite.DEBUG(true);
 SQLite.enablePromise(true);
 
@@ -110,7 +109,6 @@ export const insertItemsFromCSV = async (fileContent) => {
   try {
     console.log('File content received:', fileContent);
 
-    // Parse CSV content using PapaParse
     const results = Papa.parse(fileContent, {
       header: false,
       skipEmptyLines: true,
@@ -137,7 +135,6 @@ export const insertItemsFromCSV = async (fileContent) => {
       }
     }
 
-    Alert.alert('Success', 'Items have been successfully inserted');
     console.log('Items have been successfully inserted');
   } catch (error) {
     Alert.alert('Error', 'Error inserting items from CSV: ' + error.message);

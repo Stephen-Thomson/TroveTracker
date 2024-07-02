@@ -2,12 +2,18 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, FlatList } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import { searchItems, deleteItemsByIds } from './Database';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Delete = () => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [results, setResults] = useState([]);
   const [selectedIds, setSelectedIds] = useState([]);
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
+
 
   const handleSearch = async () => {
     if (!name.trim()) {
@@ -22,7 +28,7 @@ const Delete = () => {
       setName('');
       setType('');
     } catch (error) {
-      console.error('Failed to search items:', error); // Log the error
+      console.error('Failed to search items:', error);
       Alert.alert('Error', 'Failed to search items');
     }
   };
@@ -63,7 +69,7 @@ const Delete = () => {
         placeholder="Enter name"
         value={name}
         onChangeText={setName}
-        placeholderTextColor="#000"
+        placeholderTextColor= {theme.text}
       />
       <Text style={styles.label}>Type (optional)</Text>
       <TextInput
@@ -71,10 +77,10 @@ const Delete = () => {
         placeholder="Enter type"
         value={type}
         onChangeText={setType}
-        placeholderTextColor="#000"
+        placeholderTextColor= {theme.text}
       />
       <Button title="Search" onPress={handleSearch} />
-      {results.length > 0 && (
+      {results.length > 0 ? (
   <>
     <View style={styles.headerContainer}>
       <View style={styles.checkboxColumn}>
@@ -96,7 +102,10 @@ const Delete = () => {
             <CheckBox
               value={selectedIds.includes(item.id)}
               onValueChange={() => handleCheckboxChange(item.id)}
-              tintColors={{ true: 'black', false: 'black' }}
+              tintColors={{
+            true: theme === 'dark' ? '#FFF' : '#000',
+            false: theme === 'dark' ? '#666' : '#CCC',
+          }}
             />
           </View>
           <View style={styles.nameColumn}>
@@ -110,29 +119,32 @@ const Delete = () => {
     />
     <Button title="Delete" onPress={handleDelete} disabled={selectedIds.length === 0} />
   </>
+  ) : (
+  <Text style={styles.noResults}>No Results Found</Text>
       )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: theme.background,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#000',
+    color: theme.text,
     fontWeight: 'bold',
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: theme.borderColor,
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
-    color: 'black',
+    color: theme.text,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -141,7 +153,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    color: 'black',
+    color: theme.text,
   },
   resultContainer: {
     flexDirection: 'row',
@@ -149,7 +161,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   resultText: {
-    color: 'black',
+    color: theme.text,
   },
   flatList: {
     flex: 1,
@@ -168,6 +180,12 @@ const styles = StyleSheet.create({
   typeColumn: {
     width: 100,
     paddingRight: 8,
+  },
+  noResults: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
+    color: theme.text,
   },
 });
 

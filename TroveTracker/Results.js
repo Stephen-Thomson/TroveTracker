@@ -1,8 +1,13 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, FlatList } from 'react-native';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Results = ({ route, navigation }) => {
   const { results } = route.params;
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
 
   return (
     <View style={styles.container}>
@@ -29,10 +34,11 @@ const Results = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: theme.background,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -42,13 +48,13 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.text,
   },
   noResults: {
     fontSize: 16,
     textAlign: 'center',
     marginTop: 20,
-    color: '#000',
+    color: theme.text,
   },
   resultContainer: {
     flexDirection: 'row',
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
   },
   resultText: {
     fontSize: 16,
-    color: '#000',
+    color: theme.text,
   },
 });
 

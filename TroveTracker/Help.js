@@ -1,42 +1,19 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Help = () => {
   const windowWidth = Dimensions.get('window').width;
   const imageWidth = windowWidth * 0.4;
   const aspectRatio = 1080/2115;
   const imageHeight = imageWidth / aspectRatio;
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme, imageWidth, imageHeight);
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-    },
-    header: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginBottom: 8,
-    },
-    helpText: {
-      marginBottom: 16,
-      fontSize: 16,
-    },
-    imageContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 16,
-    },
-    image: {
-      width: imageWidth,
-      height: imageHeight,
-      marginHorizontal: 8,
-      resizeMode: 'contain',
-    },
-    separator: {
-      height: 16,
-    },
-  });
+
+  
 
   return (
     <ScrollView style={styles.container}>
@@ -106,6 +83,40 @@ const Help = () => {
     </ScrollView>
   );
 };
+
+const getStyles = (theme, imageWidth, imageHeight) => StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: theme.background,
+  },
+  header: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: theme.text,
+    marginBottom: 8,
+  },
+  helpText: {
+    marginBottom: 16,
+    color: theme.text,
+    fontSize: 16,
+  },
+  imageContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  image: {
+    width: imageWidth,
+    height: imageHeight,
+    marginHorizontal: 8,
+    resizeMode: 'contain',
+  },
+  separator: {
+    height: 16,
+  },
+});
 
 
 

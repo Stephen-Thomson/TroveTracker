@@ -3,10 +3,15 @@ import { View, Text, Button, Alert, StyleSheet, PermissionsAndroid, Platform } f
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { insertItemsFromCSV } from './Database';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const ReadFile = () => {
   const [fileName, setFileName] = useState(null);
   const [fileContents, setFileContents] = useState(''); 
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
 
   const handleBrowse = async () => {
     try {
@@ -63,20 +68,21 @@ const ReadFile = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    backgroundColor: theme.background,
   },
   filePath: {
     marginBottom: 16,
     fontSize: 16,
-    color: 'black',
+    color: theme.text,
   },
   spacing: {
-    marginTop: 20, // Add space between the buttons
+    marginTop: 20,
   },
 });
 

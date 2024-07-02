@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { searchItems } from './Database';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
 const Search = ({ navigation }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
 
   const handleSearch = async () => {
     if (!name.trim() && !type.trim()) {
@@ -32,7 +37,7 @@ const Search = ({ navigation }) => {
         placeholder="Enter name"
         value={name}
         onChangeText={setName}
-        placeholderTextColor="#000"
+        placeholderTextColor= {theme.text}
       />
       <Text style={styles.label}>Type (optional)</Text>
       <TextInput
@@ -40,32 +45,33 @@ const Search = ({ navigation }) => {
         placeholder="Enter type"
         value={type}
         onChangeText={setType}
-        placeholderTextColor="#000"
+        placeholderTextColor= {theme.text}
       />
       <Button title="Search" onPress={handleSearch} disabled={isButtonDisabled} />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: theme.background,
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#000',
+    color: theme.text,
     fontWeight: 'bold',
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: theme.borderColor,
     borderWidth: 1,
     marginBottom: 12,
     paddingLeft: 8,
-    color: '#000',
+    color: theme.text,
   },
 });
 

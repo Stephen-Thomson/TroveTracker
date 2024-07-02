@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTheme } from './ThemeContext';
+import { lightTheme, darkTheme } from './themes';
 
-// Import your screen components
 import Front from './Front';
 import Search from './Search';
 import Input from './Input';
@@ -14,6 +15,10 @@ import Results from './Results';
 const Stack = createStackNavigator();
 
 const AppWrapper = ({ navigation }) => {
+  const { theme } = useTheme();
+  const currentTheme = theme === 'light' ? lightTheme : darkTheme;
+  const styles = getStyles(currentTheme);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -55,18 +60,19 @@ const AppWrapper = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: theme.background,
   },
   header: {
-    backgroundColor: '#800080',
+    backgroundColor: theme.header,
     height: 75,
     justifyContent: 'center',
     alignItems: 'center',
   },
   headerText: {
-    color: '#fff',
+    color: theme.text,
     fontSize: 48,
     fontFamily: 'Harrington Bold'
   },
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    color: '#fff',
+    color: theme.text,
     fontSize: 16,
     fontWeight: 'bold',
     margin: 0,
