@@ -16,13 +16,15 @@ const Search = ({ navigation }) => {
       Alert.alert('Validation Error', 'Please enter a name or type.');
       return;
     }
-
+  
     try {
+      console.log('Searching for Name:', name.trim(), 'Type:', type.trim());
       const results = await searchItems(name.trim(), type.trim());
       setName('');
       setType('');
       navigation.navigate('Results', { results });
     } catch (error) {
+      console.error('Search Error:', error);
       Alert.alert('Error', 'Failed to search items');
     }
   };

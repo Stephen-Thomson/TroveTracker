@@ -8,6 +8,7 @@ const Results = ({ route, navigation }) => {
   const { theme } = useTheme();
   const currentTheme = theme === 'light' ? lightTheme : darkTheme;
   const styles = getStyles(currentTheme);
+  const sortedResults = results.sort((a, b) => a.Name.localeCompare(b.Name));
 
   return (
     <View style={styles.container}>
@@ -19,7 +20,7 @@ const Results = ({ route, navigation }) => {
         <Text style={styles.noResults}>No match found</Text>
       ) : (
         <FlatList
-          data={results}
+          data={sortedResults}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.resultContainer}>

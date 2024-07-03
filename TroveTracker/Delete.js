@@ -23,7 +23,8 @@ const Delete = () => {
 
     try {
       const searchResults = await searchItems(name.trim(), type.trim());
-      setResults(searchResults);
+      const sortedResults = searchResults.sort((a, b) => a.Name.localeCompare(b.Name));
+      setResults(sortedResults);
       setSelectedIds([]);
       setName('');
       setType('');

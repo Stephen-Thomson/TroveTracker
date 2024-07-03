@@ -143,23 +143,26 @@ export const insertItemsFromCSV = async (fileContent) => {
   }
 };
 
-
-
-export const searchItems = async (query, type = '') => {
+export const searchItems = async (query = '', type = '') => {
   const db = await getDBConnection();
-  let sql = `SELECT * FROM ${selectedTable} WHERE `;
+  let sql = `SELECT * FROM ${selectedTable}`;
+  let conditions = [];
   let params = [];
 
-  if (query && type) {
-    sql += 'LOWER(Name) LIKE ? AND LOWER(Type) = ?';
-    params.push(`%${query.toLowerCase()}%`, type.toLowerCase());
-  } else if (query) {
-    sql += 'LOWER(Name) LIKE ?';
+  if (query) {
+    conditions.push('LOWER(Name) LIKE ?');
     params.push(`%${query.toLowerCase()}%`);
-  } else if (type) {
-    sql += 'LOWER(Type) = ?';
+  }
+  if (type) {
+    conditions.push('LOWER(Type) LIKE ?');
     params.push(`%${type.toLowerCase()}%`);
   }
+  if (conditions.length > 0) {
+    sql += ' WHERE ' + conditions.join(' AND ');
+  }
+
+  console.log('SQL Query:', sql);
+  console.log('Parameters:', params);
 
   return new Promise((resolve, reject) => {
     db.transaction(tx => {
@@ -168,13 +171,16 @@ export const searchItems = async (query, type = '') => {
         for (let i = 0; i < results.rows.length; i++) {
           rows.push(results.rows.item(i));
         }
+        console.log('Search Results:', rows);
         resolve(rows);
       }, error => {
+        console.error('SQL Error:', error);
         reject(error);
       });
     });
   });
 };
+
 
 export const deleteItemsByIds = async (ids) => {
   if (ids.length === 0) return;
