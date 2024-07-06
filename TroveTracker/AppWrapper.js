@@ -11,6 +11,7 @@ import ReadFile from './ReadFile';
 import Delete from './Delete';
 import Help from './Help';
 import Results from './Results';
+import List from './List';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,9 @@ const AppWrapper = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Delete')} style={styles.button}>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('List')} style={styles.button}>
+          <Text style={styles.buttonText}>List</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Help')} style={styles.button}>
           <Text style={styles.buttonText}>Help</Text>
         </TouchableOpacity>
@@ -55,6 +59,7 @@ const AppWrapper = ({ navigation }) => {
         <Stack.Screen name="Delete" component={Delete} />
         <Stack.Screen name="Help" component={Help} />
         <Stack.Screen name="Results" component={Results} />
+        <Stack.Screen name="List" component={List} />
       </Stack.Navigator>
     </View>
   );

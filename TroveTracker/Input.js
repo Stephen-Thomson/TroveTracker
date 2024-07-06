@@ -36,6 +36,7 @@ const Input = () => {
         placeholderTextColor= {theme.text}
         value={name}
         onChangeText={setName}
+        maxLength={255}
       />
       <Text style={styles.label}>Type (optional)</Text>
       <TextInput
@@ -44,6 +45,7 @@ const Input = () => {
         placeholderTextColor= {theme.text}
         value={type}
         onChangeText={setType}
+        maxLength={255}
       />
       <Button title="Add" onPress={handleAddItem} />
     </View>

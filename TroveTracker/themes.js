@@ -6,6 +6,7 @@ export const lightTheme = {
     switchTrackFalse: '#ADD8E6',
     switchTrackTrue: '#9370DB',
     switchThumb: '#00008B',
+    primary: '#0000FF',
   };
   
   export const darkTheme = {
@@ -16,4 +17,5 @@ export const lightTheme = {
     switchTrackFalse: '#1E90FF',
     switchTrackTrue: '#800080',
     switchThumb: '#00008B',
+    primary: '#0000FF',
   };

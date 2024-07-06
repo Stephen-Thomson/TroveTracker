@@ -181,6 +181,30 @@ export const searchItems = async (query = '', type = '') => {
   });
 };
 
+export const getAllItems = async () => {
+  const db = await getDBConnection();
+  const sql = `SELECT * FROM ${selectedTable}`;
+
+  return new Promise((resolve, reject) => {
+    db.transaction(tx => {
+      tx.executeSql(
+        sql,
+        [],
+        (tx, results) => {
+          const rows = [];
+          for (let i = 0; i < results.rows.length; i++) {
+            rows.push(results.rows.item(i));
+          }
+          resolve(rows);
+        },
+        (tx, error) => {
+          console.error('Failed to retrieve items:', error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
 
 export const deleteItemsByIds = async (ids) => {
   if (ids.length === 0) return;

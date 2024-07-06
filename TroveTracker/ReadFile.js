@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, Alert, StyleSheet, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, Button, Alert, StyleSheet } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import { insertItemsFromCSV } from './Database';

@@ -70,6 +70,7 @@ const Delete = () => {
         placeholder="Enter name"
         value={name}
         onChangeText={setName}
+        maxLength={255}
         placeholderTextColor= {theme.text}
       />
       <Text style={styles.label}>Type (optional)</Text>
@@ -78,6 +79,7 @@ const Delete = () => {
         placeholder="Enter type"
         value={type}
         onChangeText={setType}
+        maxLength={255}
         placeholderTextColor= {theme.text}
       />
       <Button title="Search" onPress={handleSearch} />
