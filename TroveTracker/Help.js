@@ -70,6 +70,15 @@ const Help = () => {
         To remove items from the database, enter the keyword(s) related to the item name or description. You can also enter a type to refine your search. Click the Search button to display the matching items. Check the boxes next to the items you wish to delete, then click the Delete button. You can enter new keyword(s) and perform another search at any time for different results.
       </Text>
 
+      <Text style={styles.header}>List</Text>
+      <View style={styles.imageContainer}>
+        <Image source={require('./imgs/listimg.png')} style={styles.image} />
+      </View>
+      <Text style={styles.helpText}>
+        The List view displays all entries in the selected table in alphabetical order, allowing you to easily browse the entire list.
+      </Text>
+      <View style={styles.separator}></View>
+
       <Text style={styles.header}>Creating A CSV</Text>
       <View style={styles.imageContainer}>
         <Image source={require('./imgs/csvimg1.png')} style={styles.image} />
